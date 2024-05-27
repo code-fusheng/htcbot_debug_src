@@ -1,0 +1,11 @@
+std_msgs/Header header
+
+StatusHtcbotModule[] status_array
+
+StatusHtcbotModule map_status
+StatusHtcbotModule localizer_status
+StatusHtcbotModule sensor_status
+StatusHtcbotModule waypoint_status
+StatusHtcbotModule planner_status
+StatusHtcbotModule control_status
+StatusHtcbotModule gateway_status

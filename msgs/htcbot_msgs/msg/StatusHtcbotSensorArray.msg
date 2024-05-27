@@ -1,0 +1,11 @@
+std_msgs/Header header
+
+StatusHtcbotSensor[] status_array
+
+StatusHtcbotSensor gnss_status
+StatusHtcbotSensor laser_status
+StatusHtcbotSensor ultrasonic_status
+StatusHtcbotSensor camera_status
+StatusHtcbotSensor imu_status
+StatusHtcbotSensor vehicle_status
+StatusHtcbotSensor other_status

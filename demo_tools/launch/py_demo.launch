@@ -1,0 +1,6 @@
+<launch>
+
+    <node pkg="demo_tools" name="py_demo_node" type="py_demo_node.py" output="screen">
+    </node>
+
+</launch>
