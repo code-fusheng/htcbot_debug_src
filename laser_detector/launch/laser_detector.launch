@@ -1,0 +1,12 @@
+<launch>
+
+    <arg name="lidar_frame" default="rslidar" />
+    <arg name="pointcloud_topic" default="rslidar_points" />
+
+    <node pkg="laser_detector" type="laser_detector_node" name="laser_detector_node" output="screen">
+        <!--  -->
+        
+    </node> 
+
+
+</launch>
