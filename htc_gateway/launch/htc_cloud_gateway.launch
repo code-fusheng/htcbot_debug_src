@@ -1,7 +1,11 @@
 <launch>
 
     <arg name="mqtt_cloud_cid" default="HTCBOT_A0003" />
-    <arg name="mqtt_cloud_broker" default="118.190.156.22" />
+    <!-- 
+        online 118.190.156.22 
+        dev    124.223.72.28 
+    -->
+    <arg name="mqtt_cloud_broker" default="124.223.72.28" />
     <arg name="mqtt_cloud_port" default="1883" />
     <arg name="mqtt_cloud_username" default="htcbot" />
     <arg name="mqtt_cloud_password" default="htcbot123456" />

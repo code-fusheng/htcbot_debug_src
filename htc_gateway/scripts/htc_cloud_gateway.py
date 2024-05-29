@@ -5,7 +5,7 @@
 Author: code-fusheng
 Date: 2024-04-29 23:10:26
 LastEditors: code-fusheng 2561035977@qq.com
-LastEditTime: 2024-05-20 16:31:14
+LastEditTime: 2024-05-29 14:52:30
 Description: 
 '''
 
@@ -206,7 +206,7 @@ class HtcCloudGatewayNode:
                     "battery_capacity": self.battery_status.capacity,
                 }
         if self.mqtt_client.is_connected:
-            self.mqtt_client.publish(self.pub_heartbeat_topic, json.dumps(pub_msg), qos=0, retain=False)
+            # self.mqtt_client.publish(self.pub_heartbeat_topic, json.dumps(pub_msg), qos=0, retain=False)
             self.module_status.module_status = int(STATUS_TYPE.READY.value)
         else:
             rospy.logwarn("[htc_cloud_gateway] ===> mqtt server not connected!")
@@ -252,10 +252,12 @@ class HtcCloudGatewayNode:
         line = str(msg.payload.decode("utf-8"))
         data = json.loads(line)
         if not "workTask" in data.keys():
-            self.task_key = data["workTask"]
+            rospy.loginfo("[htc_cloud_gateway] No WorkTask Key Control Command Is Found! Message Is: {}".format(data))
+            return
         if not "taskStatus" in data.keys():
             rospy.loginfo("[gateway] No taskStatus control command is found, full message is: {}".format(data))
             return
+        self.task_key = data["workTask"]
         cmd = int(data["taskStatus"])
         if cmd == TaskStatus.START:
             self.task_start_pose = self.current_pose
