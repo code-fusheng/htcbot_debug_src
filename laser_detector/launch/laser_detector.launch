@@ -5,7 +5,6 @@
 
     <node pkg="laser_detector" type="laser_detector_node" name="laser_detector_node" output="screen">
         <!--  -->
-        
     </node> 
 
 </launch>

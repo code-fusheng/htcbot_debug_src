@@ -1,0 +1,9 @@
+<launch>
+
+    <arg name="is_pub_topic" default="true" />
+
+    <node pkg="media_tools" type="camera_play_node.py" name="camera_play_node" output="screen">
+        <param name="is_pub_topic" value="$(arg is_pub_topic)" />
+    </node>
+
+</launch>

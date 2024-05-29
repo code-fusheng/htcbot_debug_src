@@ -1,0 +1,24 @@
+<launch>
+
+    <arg name="mqtt_cloud_cid" default="HTCBOT_A0003" />
+    <arg name="mqtt_cloud_broker" default="118.190.156.22" />
+    <arg name="mqtt_cloud_port" default="1883" />
+    <arg name="mqtt_cloud_username" default="htcbot" />
+    <arg name="mqtt_cloud_password" default="htcbot123456" />
+    <arg name="htcbot_vin" default="HTCBOT_A0003" />
+    <arg name="htcbot_vtype" default="jd01" />
+
+    <node pkg="htc_gateway" type="htc_cloud_gateway.py" name="htc_cloud_gateway_node" output="screen">
+        <param name="mqtt_cloud_cid" value="$(arg mqtt_cloud_cid)" />
+        <param name="mqtt_cloud_broker" value="$(arg mqtt_cloud_broker)" />
+        <param name="mqtt_cloud_port" value="$(arg mqtt_cloud_port)" />
+        <param name="mqtt_cloud_username" value="$(arg mqtt_cloud_username)" />
+        <param name="mqtt_cloud_password" value="$(arg mqtt_cloud_password)" />
+        <param name="htcbot_vin" value="$(arg htcbot_vin)" />
+        <param name="htcbot_vtype" value="$(arg htcbot_vtype)" />
+    </node>
+
+    <node pkg="htc_gateway" type="htc_video_streamer.py" name="htc_video_streamer_node" output="screen">
+    </node>
+
+</launch>

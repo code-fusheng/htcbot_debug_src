@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "*.txt": "plaintext",
+    "__split_buffer": "cpp",
+    "deque": "cpp",
+    "string": "cpp",
+    "vector": "cpp"
+  }
+}

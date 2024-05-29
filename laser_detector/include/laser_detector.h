@@ -2,7 +2,7 @@
  * @Author: code-fusheng
  * @Date: 2024-04-25 09:56:24
  * @LastEditors: code-fusheng 2561035977@qq.com
- * @LastEditTime: 2024-05-22 21:11:20
+ * @LastEditTime: 2024-05-29 10:36:12
  * @Description: 
  */
 #ifndef LASER_DETECTOR_H
@@ -27,7 +27,7 @@
 #include <std_msgs/Int16.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl_ros/point_cloud.h>
-
+#include <pcl/filters/radius_outlier_removal.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
@@ -56,7 +56,9 @@ private:
     // 声明动态重配置服务器
     dynamic_reconfigure::Server<laser_detector::LaserDetectorConfig> server_;
 
-	ros::Publisher pub_roi_pointcloud_;
+    ros::Publisher pub_roi_pointcloud_;
+    ros::Publisher pub_raw_pointcloud_;
+    ros::Publisher pub_detect_pointcloud_;
     ros::Publisher pub_laser_detection_;
     ros::Subscriber sub_pointcloud_;
 
@@ -75,7 +77,13 @@ private:
     double laser_detect_right_;
     double laser_detect_top_;
     double laser_detect_bottom_;
-    
+
+    bool enable_radius_outlier_filter_;
+    double radius_outlier_filter_radius_;
+    double radius_outlier_filter_nums_;
+
+    // 
+
     void dynamicReconfigureCallback(laser_detector::LaserDetectorConfig &config, uint32_t level);
     bool setSwitchStatusCallback(htcbot_msgs::SwitchStatusSrv::Request &req, htcbot_msgs::SwitchStatusSrv::Response &res);
     void callbackPointCloud(const sensor_msgs::PointCloud2::ConstPtr& input);

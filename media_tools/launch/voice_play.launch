@@ -1,0 +1,13 @@
+<launch>
+
+    <param name="/sound_play/audio_device" value="USB Audio Device" />
+    <arg name="local_voice_dir" default="$(find media_tools)/source/"/>
+
+    <!-- sudo usermod -aG audio $USER -->
+    <node pkg="sound_play" name="soundplay_node" type="soundplay_node.py" output="screen" />
+
+    <node pkg="media_tools" type="voice_play_node.py" name="voice_play_node" output="screen">
+        <param name="local_voice_dir" value="$(arg local_voice_dir)" />
+    </node>
+
+</launch>
