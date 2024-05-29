@@ -28,6 +28,7 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl_ros/point_cloud.h>
 #include <pcl/filters/radius_outlier_removal.h>
+#include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
@@ -59,6 +60,7 @@ private:
     ros::Publisher pub_roi_pointcloud_;
     ros::Publisher pub_raw_pointcloud_;
     ros::Publisher pub_detect_pointcloud_;
+    ros::Publisher pub_close_cloud_;
     ros::Publisher pub_laser_detection_;
     ros::Subscriber sub_pointcloud_;
 
@@ -77,16 +79,22 @@ private:
     double laser_detect_right_;
     double laser_detect_top_;
     double laser_detect_bottom_;
-
+    //半径滤波
     bool enable_radius_outlier_filter_;
     double radius_outlier_filter_radius_;
     double radius_outlier_filter_nums_;
-
-    // 
+    //离群滤波
+    bool enable_statistical_outlier_filter_;
+    double statistical_outlier_filter_nums_;
+    double statistical_outlier_filter_thresh_;
+    // 强度滤波
+    bool enable_intensity_outlier_filter_;
+    double intensity_thresh_;
 
     void dynamicReconfigureCallback(laser_detector::LaserDetectorConfig &config, uint32_t level);
     bool setSwitchStatusCallback(htcbot_msgs::SwitchStatusSrv::Request &req, htcbot_msgs::SwitchStatusSrv::Response &res);
     void callbackPointCloud(const sensor_msgs::PointCloud2::ConstPtr& input);
+    void doFilter();
 };
 
 }

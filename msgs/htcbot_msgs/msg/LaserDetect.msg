@@ -1,4 +1,8 @@
 Header header
+float32 height	 # 高度
+float32 direction	 # 角度
+float32 distance         # 近距离值
+
 float32 front_distance
 float32 back_distance
 float32 left_distance
