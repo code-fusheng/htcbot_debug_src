@@ -26,3 +26,13 @@ pip install apscheduler
 # apscheduler 高版本存在 python 2.7 用不了 datetime.datetime
 pip install apscheduler==3.7.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
+
+###5.29
+一、laser_detector功能包：
+1.加入强度滤波、半径滤波、统计滤波，默认值已调试好
+2.输出话题加入距离、角度、高度三个指标
+3.增加最近点的点云话题以便后续继续调试
+二、plane_fit_ground_filter功能包：
+1.新增传感器高度标定功能，原理：原点到拟合地面的距离。
+（文件结构还比较乱，该功能还没专门独立分出来）
+
