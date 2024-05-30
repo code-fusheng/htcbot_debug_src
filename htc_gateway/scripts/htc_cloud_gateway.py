@@ -5,7 +5,7 @@
 Author: code-fusheng
 Date: 2024-04-29 23:10:26
 LastEditors: code-fusheng 2561035977@qq.com
-LastEditTime: 2024-05-29 14:52:30
+LastEditTime: 2024-05-30 10:03:19
 Description: 
 '''
 
@@ -72,6 +72,7 @@ class HtcCloudGatewayNode:
         self.task_start_pose = None
         self.task_start_time = None
         self.task_key = None
+        self.auto_next_task = False 
 
     def run(self):
         self.init()   
@@ -158,13 +159,15 @@ class HtcCloudGatewayNode:
     def callback_current_pose(self, msg):
         self.current_pose = msg
         if self.task_start_pose:
-            if (rospy.Time().now() - self.task_start_time).to_sec() < 10:
+            if (rospy.Time().now() - self.task_start_time).to_sec() < 60:
                 return
             if math.fabs(self.current_pose.pose.position.x - self.task_start_pose.pose.position.x) < 1.0 and math.fabs(self.current_pose.pose.position.y - self.task_start_pose.pose.position.y) < 1.0 :
+                rospy.loginfo("[htc_cloud_gateway] ===> car near start_point! auto report task to cloud")
                 user_cmd_msg = UserCmd()
                 user_cmd_msg.data = user_cmd_msg.NORMAL_PAUSE
                 self.pub_user_cmd.publish(user_cmd_msg)
                 self.task_status = TaskStatus.STOP
+                self.auto_next_task = True
                 self.report_task_status()
 
     def callback_battery_status(self, msg):
@@ -262,6 +265,8 @@ class HtcCloudGatewayNode:
         if cmd == TaskStatus.START:
             self.task_start_pose = self.current_pose
             self.task_start_time = rospy.Time().now()
+        if cmd == TaskStatus.STOP:
+            self.auto_next_task = False
         if cmd == TaskStatus.START or cmd == TaskStatus.CONTINUE:
             user_cmd_msg = UserCmd()
             user_cmd_msg.data = user_cmd_msg.NORMAL_RUN
@@ -306,6 +311,7 @@ class HtcCloudGatewayNode:
                     "workTask": self.task_key,
                     "taskStatus": self.task_status,
                     "vin": self.vin,
+                    "autoNext": self.auto_next_task,
                     "timestamp": time.time(),
                   }
         self.mqtt_client.publish(self.pub_task_status_topic, json.dumps(pub_msg), qos=1, retain=False)
