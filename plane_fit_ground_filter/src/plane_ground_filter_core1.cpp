@@ -139,9 +139,7 @@ void PlaneGroundFilter::extract_initial_seeds_(const pcl::PointCloud<VPoint> &p_
     
     for (int i = 0; i < p_sorted.points.size(); i++)
     {
-        if (p_sorted.points[i].x >= -8&& p_sorted.points[i].x <= 8&&
-            p_sorted.points[i].y >= -5&& p_sorted.points[i].y <= 5 &&
-            p_sorted.points[i].z < lpr_height + th_seeds_)
+        if (p_sorted.points[i].z < lpr_height + th_seeds_)
         {
             g_seeds_pc->points.push_back(p_sorted.points[i]);//将低于平均高度的种子点都当作下一步平面点
         }

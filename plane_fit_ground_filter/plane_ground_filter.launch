@@ -19,9 +19,9 @@
 <!-- LPR（低点代表）的数量 -->
 <arg name="num_lpr" default="40"/><!-- 20-->
 <!-- 种子点阈值 -->
-<arg name="th_seeds" default="0.5"/>
+<arg name="th_seeds" default="0.1"/>
 <!-- 距离阈值 -->
-<arg name="th_dist" default="0.3"/> <!-- 1.2-->
+<arg name="th_dist" default="0.1"/> <!-- 1.2-->
 
 
     <node pkg="plane_ground_filter" type="plane_ground_filter_node" name="plane_ground_filter_node" output="screen">

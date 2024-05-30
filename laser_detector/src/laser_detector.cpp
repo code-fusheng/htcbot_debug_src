@@ -83,44 +83,7 @@ bool LaserDetector::setSwitchStatusCallback(htcbot_msgs::SwitchStatusSrv::Reques
     return true;                      
 }
 //反射强度滤波、半径滤波、离群点滤波
-   void LaserDetector::doFilter(){
-    pcl::PointCloud<pcl::PointXYZI> firstfilterCloud; 
-    pcl::PointCloud<pcl::PointXYZI> filteredCloud; 
-    pcl::PointCloud<pcl::PointXYZI> roiCloud; 
-    pcl::RadiusOutlierRemoval<pcl::PointXYZI> radiusOutlierFilter;
-    pcl::StatisticalOutlierRemoval<pcl::PointXYZI> statisticalOutlierRemoval;
-   if(enable_intensity_outlier_filter_){
-     for (const auto& point :roiCloud.points)
-     {
-         if (point.intensity >intensity_thresh_){
-            continue;
-        }else{
-         firstfilterCloud.points.push_back(point);
-        }
-     }
-   }else{
-    firstfilterCloud=roiCloud;
-   }
-
-    if (enable_radius_outlier_filter_) {
-        radiusOutlierFilter.setInputCloud(firstfilterCloud.makeShared()); // 设置RadiusOutlierRemoval的输入点云
-        radiusOutlierFilter.setRadiusSearch(radius_outlier_filter_radius_); // 搜索半径
-        radiusOutlierFilter.setMinNeighborsInRadius(radius_outlier_filter_nums_); // 设置半径内最小邻居点数
-        radiusOutlierFilter.filter(filteredCloud);
-    } else {
-        filteredCloud = firstfilterCloud;
-    }
-	
-if(enable_statistical_outlier_filter_){
-	statisticalOutlierRemoval.setInputCloud(firstfilterCloud.makeShared());//设置待滤波的点云
-	statisticalOutlierRemoval.setMeanK(statistical_outlier_filter_nums_);//设置在进行统计时考虑查询点邻居点数
-	statisticalOutlierRemoval.setStddevMulThresh(statistical_outlier_filter_thresh_);//设置判断是否为离群点的阈值
-	statisticalOutlierRemoval.filter(filteredCloud);//将滤波结果保存在cloud_filtered中
-}else{
-    filteredCloud = firstfilterCloud;
-}
-    }
-
+   
 void LaserDetector::callbackPointCloud(const sensor_msgs::PointCloud2::ConstPtr& input) {
     // 将ROS的PointCloud2消息转换为PCL的PointCloud
     pcl::PointCloud<pcl::PointXYZI>rawCloud;
@@ -165,7 +128,38 @@ void LaserDetector::callbackPointCloud(const sensor_msgs::PointCloud2::ConstPtr&
             roiCloud.points.push_back(point);  
         }
     }
-    LaserDetector::doFilter();
+
+   if(enable_intensity_outlier_filter_){
+     for (const auto& point :roiCloud.points)
+     {
+         if (point.intensity >intensity_thresh_){
+            continue;
+        }else{
+         firstfilterCloud.points.push_back(point);
+        }
+     }
+   }else{
+    firstfilterCloud=roiCloud;
+   }
+
+    if (enable_radius_outlier_filter_) {
+        radiusOutlierFilter.setInputCloud(firstfilterCloud.makeShared()); // 设置RadiusOutlierRemoval的输入点云
+        radiusOutlierFilter.setRadiusSearch(radius_outlier_filter_radius_); // 搜索半径
+        radiusOutlierFilter.setMinNeighborsInRadius(radius_outlier_filter_nums_); // 设置半径内最小邻居点数
+        radiusOutlierFilter.filter(filteredCloud);
+    } else {
+        filteredCloud = firstfilterCloud;
+    }
+	
+if(enable_statistical_outlier_filter_){
+	statisticalOutlierRemoval.setInputCloud(firstfilterCloud.makeShared());//设置待滤波的点云
+	statisticalOutlierRemoval.setMeanK(statistical_outlier_filter_nums_);//设置在进行统计时考虑查询点邻居点数
+	statisticalOutlierRemoval.setStddevMulThresh(statistical_outlier_filter_thresh_);//设置判断是否为离群点的阈值
+	statisticalOutlierRemoval.filter(filteredCloud);//将滤波结果保存在cloud_filtered中
+}else{
+    filteredCloud = firstfilterCloud;
+}
+
      for (int i = 0; i < filteredCloud.points.size(); i++){
             detectCloud.points.push_back(filteredCloud.points[i]);
                         // 计算与原点的距离
@@ -214,8 +208,6 @@ void LaserDetector::callbackPointCloud(const sensor_msgs::PointCloud2::ConstPtr&
     laser_detect_msg.height=height;
     laser_detect_msg.direction = angle_in_degrees;
     pub_laser_detection_.publish(laser_detect_msg);
-
+}
 }
 
-
-}
