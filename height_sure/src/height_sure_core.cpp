@@ -1,13 +1,11 @@
-#include "plane_ground_filter_core.h"
+#include "height_sure_core.h"
 
 
-
-
-PlaneGroundFilter::PlaneGroundFilter(ros::NodeHandle &nh)
+heightsure::heightsure(ros::NodeHandle &nh)
 {
     std::string input_topic;
     nh.getParam("input_topic", input_topic);
-    sub_point_cloud_ = nh.subscribe("/rslidar_points", 10, &PlaneGroundFilter::point_cb, this); // 订阅激光雷达的话题
+    sub_point_cloud_ = nh.subscribe("/rslidar_points", 10, &heightsure::point_cb, this); // 订阅激光雷达的话题
     // init publisher
     std::string no_ground_topic, ground_topic, all_points_topic;
 
@@ -47,80 +45,16 @@ PlaneGroundFilter::PlaneGroundFilter(ros::NodeHandle &nh)
     ros::spin();
 }
 
-PlaneGroundFilter::~PlaneGroundFilter() {}
+heightsure::~heightsure() {}
 bool point_cmp(VPoint a, VPoint b){//比较z轴高度用
     return a.z < b.z;
 }
-void PlaneGroundFilter::Spin()
+void heightsure::Spin()
 {
 }
-//去除过高的点云
-void PlaneGroundFilter::clip_above(const pcl::PointCloud<VPoint>::Ptr in,
-                                   const pcl::PointCloud<VPoint>::Ptr out)
-{
-    pcl::ExtractIndices<VPoint> cliper;//创建用于提取点的对象
-    cliper.setInputCloud(in);//设置将要处理的点云
-    pcl::PointIndices indices;//用于存储要移除点索引的结构体
-#pragma omp for//加速并行处理
-    for (size_t i = 0; i < in->points.size(); i++) // 检查每个点的z坐标是否高于clip_height_，如果是，则添加到索引列表中
-    {
-        if (in->points[i].z > clip_height_)
-        {
-            indices.indices.push_back(i);
-        }
-    }
-    cliper.setIndices(boost::make_shared<pcl::PointIndices>(indices));// 将收集到的索引设置为ExtractIndices对象的索引
-    cliper.setNegative(true); //true是移除
-    cliper.filter(*out);// 执行过滤，根据设置的索引移除点云中的点，结果存储在输出点云out中
-}
 
 
-//移除太近的点
-void PlaneGroundFilter::remove_close_far_pt(const pcl::PointCloud<VPoint>::Ptr in,
-                                            const pcl::PointCloud<VPoint>::Ptr out)
-{
-    pcl::ExtractIndices<VPoint> cliper;
-    cliper.setInputCloud(in);
-    pcl::PointIndices indices;
-#pragma omp for
-    for (size_t i = 0; i < in->points.size(); i++)
-    {
-        double distance = sqrt(in->points[i].x * in->points[i].x + in->points[i].y * in->points[i].y);//点到原点的距离
-
-        if ((distance < min_distance_) || (distance > max_distance_))
-        {
-            indices.indices.push_back(i);
-        }
-    }
-    cliper.setIndices(boost::make_shared<pcl::PointIndices>(indices));
-    cliper.setNegative(true); //true 是移除
-    cliper.filter(*out);
-}
-
-void PlaneGroundFilter::clip_to_circle(const pcl::PointCloud<VPoint>::Ptr in,
-                                       const pcl::PointCloud<VPoint>::Ptr out)
-{
-    pcl::ExtractIndices<VPoint> cliper; // 创建用于提取点的对象
-    cliper.setInputCloud(in); // 设置将要处理的点云
-    pcl::PointIndices indices; // 用于存储要保留点索引的结构体
-    // 遍历点云，检查每个点是否在圆内
-    for (size_t i = 0; i < in->points.size(); i++)
-    {
-        double distance = sqrt(in->points[i].x * in->points[i].x + in->points[i].y * in->points[i].y);
-        // 如果点在圆外，则添加到索引列表中
-        if (distance > 8.0)
-        {
-            indices.indices.push_back(i);
-        }
-    }
-
-    // 将收集到的索引设置为ExtractIndices对象的索引，准备移除这些点
-    cliper.setIndices(boost::make_shared<pcl::PointIndices>(indices));
-    cliper.setNegative(true); // true 表示移除这些点
-    cliper.filter(*out); // 执行过滤，结果存储在输出点云out中
-}
-
-void PlaneGroundFilter::estimate_plane_(void)
+void heightsure::estimate_plane_(void)
 {
     
     Eigen::Matrix3f cov;   //协方差
@@ -142,8 +76,7 @@ void PlaneGroundFilter::estimate_plane_(void)
 
 }
 
-
-void PlaneGroundFilter::extract_initial_seeds_(const pcl::PointCloud<VPoint> &p_sorted)//选择最初的种子点
+void heightsure::extract_initial_seeds_(const pcl::PointCloud<VPoint> &p_sorted)//选择最初的种子点
 {
     
     double sum = 0;
@@ -163,35 +96,36 @@ void PlaneGroundFilter::extract_initial_seeds_(const pcl::PointCloud<VPoint> &p_
     }
 }
 
-void PlaneGroundFilter::post_process(const pcl::PointCloud<VPoint>::Ptr in, const pcl::PointCloud<VPoint>::Ptr out)
+void heightsure::point_cb(const sensor_msgs::PointCloud2ConstPtr &in_cloud_ptr)
 {
-    pcl::PointCloud<VPoint>::Ptr cliped_pc_ptr(new pcl::PointCloud<VPoint>);
-    clip_above(in, cliped_pc_ptr);
-    pcl::PointCloud<VPoint>::Ptr remove_close(new pcl::PointCloud<VPoint>);
-    remove_close_far_pt(cliped_pc_ptr, remove_close);
-    pcl::PointCloud<VPoint>::Ptr filtered_pc(new pcl::PointCloud<VPoint>);
-    clip_to_circle(remove_close, out); // 调用裁剪函数，半径设置为8.0米
-}
-
-void PlaneGroundFilter::point_cb(const sensor_msgs::PointCloud2ConstPtr &in_cloud_ptr)
-{
+    pcl::PointCloud<VPoint> raw_laserCloudIn;
+    pcl::PointCloud<VPoint> raw_laserCloudIn_x;
+    pcl::PointCloud<VPoint> raw_laserCloudIn_y;
     pcl::PointCloud<VPoint> laserCloudIn;
-    pcl::fromROSMsg(*in_cloud_ptr, laserCloudIn);
+    pcl::fromROSMsg(*in_cloud_ptr, raw_laserCloudIn);
+    pcl::StatisticalOutlierRemoval<VPoint> statisticalOutlierRemoval;
     pcl::PassThrough<VPoint> pass;
-    pass.setInputCloud(laserCloudIn.makeShared());
+   
+    //  ROS_INFO(" ===> raw_laserCloudIn.size: %zu", raw_laserCloudIn.points.size());
+    pass.setInputCloud(raw_laserCloudIn.makeShared());
     pass.setFilterFieldName("x");
-    pass.setFilterLimits(-4.0, 4.0); // 假设x坐标的过滤范围是-4到4
-    pass.filter(laserCloudIn); // 应用滤波器
-
+    pass.setFilterLimits(0.0,6.0); // x坐标的过滤范围是0到6
+    pass.filter(raw_laserCloudIn_x); // 应用滤波器
+    // ROS_INFO(" ===> raw_laserCloudIn_x.size: %zu", raw_laserCloudIn_x.points.size());
+    pass.setInputCloud(raw_laserCloudIn_x.makeShared());
     pass.setFilterFieldName("y");
     pass.setFilterLimits(-4.0, 4.0); // 假设y坐标的过滤范围是-4到4
-    pass.filter(laserCloudIn); // 再次应用滤波器
+    pass.filter(raw_laserCloudIn_y); // 再次应用滤波器
 
+    double statistical_outlier_filter_nums_=30,statistical_outlier_filter_thresh_=1;
+
+    statisticalOutlierRemoval.setInputCloud(raw_laserCloudIn_y.makeShared());       
+    statisticalOutlierRemoval.setMeanK(statistical_outlier_filter_nums_ );            
+    statisticalOutlierRemoval.setStddevMulThresh(statistical_outlier_filter_thresh_ ); 
+    statisticalOutlierRemoval.filter(laserCloudIn);       
 
     pcl::PointCloud<VPoint> laserCloudIn_org = laserCloudIn;
 
-
-    
     SLRPointXYZIRL point;//定义点
 //接收点云,将点云的标签都设置为0，经过后续的计算，如果点云是地面点，将标签设置为1
     for (size_t i = 0; i < laserCloudIn.points.size(); i++)
@@ -210,14 +144,51 @@ void PlaneGroundFilter::point_cb(const sensor_msgs::PointCloud2ConstPtr &in_clou
     // 2.Sort on Z-axis value.
     sort(laserCloudIn.points.begin(), laserCloudIn.end(), point_cmp);//按Z轴进行排序
 
-    pcl::PointCloud<VPoint>::iterator it = laserCloudIn.points.begin();
-
     // 4. 提取地面种子点
     extract_initial_seeds_(laserCloudIn);
     g_ground_pc = g_seeds_pc;
     // 5. 循环
     for (int i = 0; i < num_iter_; i++)
     {
+
+        if (i == num_iter_ - 1 || i == num_iter_ - 2 || i == num_iter_ - 3) // 对最后三个循环进行数据优化
+        {
+           ROS_INFO(" ===> before_filter.size: %zu", g_ground_pc->size());
+          // 计算Z轴数据的中位数
+           std::vector<float> z_values;
+          for (const auto& point : g_ground_pc->points) {
+          z_values.push_back(point.z);
+          }
+          std::nth_element(z_values.begin(), z_values.begin() + z_values.size() / 2, z_values.end());
+          float median_z = z_values[z_values.size() / 2];
+
+          // 计算Z轴数据的标准差
+          float sum = 0, mean_z;
+          for (const auto &z : z_values)
+          {
+               sum += z;
+          }
+          mean_z = sum / z_values.size();
+          float sq_sum = 0;
+          for (const auto &z : z_values)
+          {
+               sq_sum += (z - mean_z) * (z - mean_z);
+          }
+          float stddev_z = std::sqrt(sq_sum / z_values.size());
+
+          // 应用Z轴过滤
+          pcl::PointCloud<VPoint> filtered_cloud;
+          for (const auto &point : g_ground_pc->points)
+          {
+               if (std::abs(point.z - median_z) <=  2*stddev_z) // 使用2倍标准差作为阈值
+               {
+                    filtered_cloud.push_back(point);
+               }
+          }
+               g_ground_pc = boost::shared_ptr<pcl::PointCloud<velodyne_pointcloud::PointXYZIR>>(new pcl::PointCloud<velodyne_pointcloud::PointXYZIR>(filtered_cloud));
+               ROS_INFO(" ===> after_filter.size: %zu", g_ground_pc->size());
+          }
+
         estimate_plane_();//拟合平面
         g_ground_pc->clear();
         g_not_ground_pc->clear();
@@ -245,7 +216,6 @@ void PlaneGroundFilter::point_cb(const sensor_msgs::PointCloud2ConstPtr &in_clou
             }
         }
     }
-
 
     // 发布地面点的话题
     sensor_msgs::PointCloud2 ground_msg;

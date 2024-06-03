@@ -58,7 +58,6 @@ private:
     dynamic_reconfigure::Server<laser_detector::LaserDetectorConfig> server_;
 
     ros::Publisher pub_roi_pointcloud_;
-    ros::Publisher pub_raw_pointcloud_;
     ros::Publisher pub_detect_pointcloud_;
     ros::Publisher pub_close_cloud_;
     ros::Publisher pub_laser_detection_;
@@ -79,6 +78,11 @@ private:
     double laser_detect_right_;
     double laser_detect_top_;
     double laser_detect_bottom_;
+
+    //离群滤波加权
+    double statistical_nums_plus_;
+    double statistical_thresh_plus_;
+
     //半径滤波
     bool enable_radius_outlier_filter_;
     double radius_outlier_filter_radius_;
@@ -94,7 +98,6 @@ private:
     void dynamicReconfigureCallback(laser_detector::LaserDetectorConfig &config, uint32_t level);
     bool setSwitchStatusCallback(htcbot_msgs::SwitchStatusSrv::Request &req, htcbot_msgs::SwitchStatusSrv::Response &res);
     void callbackPointCloud(const sensor_msgs::PointCloud2::ConstPtr& input);
-    void doFilter();
 };
 
 }

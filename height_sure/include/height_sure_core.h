@@ -16,6 +16,7 @@
 #include <pcl/filters/filter.h>
 #include <pcl/common/centroid.h>
 #include <pcl/filters/extract_indices.h>
+#include <pcl/filters/statistical_outlier_removal.h>
 // 矩阵运算
 #include <Eigen/Dense>
 #include <sensor_msgs/PointCloud2.h>
@@ -37,7 +38,7 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(velodyne_pointcloud::PointXYZIR,
                                   (float, x, x)(float, y, y)(float, z, z)(float, intensity, intensity)(uint16_t, ring, ring))
 
 // 用于存储聚类点
-namespace plane_ground_filter
+namespace height_sure
 {
 struct PointXYZIRL
 {
@@ -50,18 +51,18 @@ struct PointXYZIRL
 
 };
 
-#define SLRPointXYZIRL plane_ground_filter::PointXYZIRL
+#define SLRPointXYZIRL height_sure::PointXYZIRL
 #define VPoint velodyne_pointcloud::PointXYZIR
 #define RUN pcl::PointCloud<SLRPointXYZIRL>
 
-POINT_CLOUD_REGISTER_POINT_STRUCT(plane_ground_filter::PointXYZIRL,
+POINT_CLOUD_REGISTER_POINT_STRUCT(height_sure::PointXYZIRL,
                                   (float, x, x)(float, y, y)(float, z, z)(float, intensity, intensity)(uint16_t, ring, ring)(uint16_t, label, label))
 
 using Eigen::JacobiSVD;
 using Eigen::MatrixXf;
 using Eigen::VectorXf;
 
-class PlaneGroundFilter
+class heightsure
 {
 
 private:
@@ -95,7 +96,7 @@ void remove_close_far_pt(const pcl::PointCloud<VPoint>::Ptr in,const pcl::PointC
                       const pcl::PointCloud<VPoint>::Ptr out);
 
 public:
-  PlaneGroundFilter(ros::NodeHandle &nh);
-  ~PlaneGroundFilter();
+  heightsure(ros::NodeHandle &nh);
+  ~heightsure();
   void Spin();
 };
