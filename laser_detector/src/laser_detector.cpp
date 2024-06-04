@@ -141,10 +141,8 @@ namespace LaserDetectorNS
             bool is_within_vehicle =
                 point.x < laser_remove_front_ ||
                 point.x > laser_remove_back_ ||
-                // point.y > laser_remove_left_||
                 point.y < laser_remove_left_ + 0.5||
                 point.y > laser_remove_right_- 0.5;
-                // point.y > laser_remove_right_;
             // ROS_INFO("is_outside_vehicle %d, point (%f, %f, %f)", is_outside_vehicle, point.x, point.y, point.z);
 
             // 如果该点在车身和侧面区域之外并且在检测范围内，则添加到结果点云中
