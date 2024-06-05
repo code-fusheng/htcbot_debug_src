@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(plane_ground_filter)
+project(height_sure)
 
 add_compile_options(-std=c++11)
 
@@ -23,7 +23,7 @@ include_directories(
 )
 link_directories(${PCL_LIBRARY_DIRS})
 
-add_executable(${PROJECT_NAME}_node src/plane_ground_filter_node.cpp src/plane_ground_filter_core.cpp)
+add_executable(${PROJECT_NAME}_node src/height_sure_node.cpp src/height_sure_core.cpp)
 
 
 
