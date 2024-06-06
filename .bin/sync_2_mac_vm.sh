@@ -7,4 +7,4 @@
  # 10.168.1.107
 ### 
 
-rsync --delete -avz --progress --exclude='.git' . code@172.20.10.5:/home/code/htcbot_debug_ws/src
+rsync --delete -avz --progress --exclude='.git' . code@10.168.1.107:/home/code/htcbot_debug_ws/src

@@ -23,15 +23,15 @@
 
 namespace velodyne_pointcloud
 {
-struct PointXYZIR
-{
-  PCL_ADD_POINT4D;                // 四元浮点数XYZ
-  float intensity;                ///激光强度
-  uint16_t ring;                  /// 激光环数
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW // 确保正确对齐
-} EIGEN_ALIGN16;
+  struct PointXYZIR
+  {
+    PCL_ADD_POINT4D;                // 四元浮点数XYZ
+    float intensity;                /// 激光强度
+    uint16_t ring;                  /// 激光环数
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW // 确保正确对齐
+  } EIGEN_ALIGN16;
 
-}; 
+};
 
 POINT_CLOUD_REGISTER_POINT_STRUCT(velodyne_pointcloud::PointXYZIR,
                                   (float, x, x)(float, y, y)(float, z, z)(float, intensity, intensity)(uint16_t, ring, ring))
@@ -39,14 +39,14 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(velodyne_pointcloud::PointXYZIR,
 // 用于存储聚类点
 namespace plane_ground_filter
 {
-struct PointXYZIRL
-{
-  PCL_ADD_POINT4D;                // 四元浮点数XYZ
-  float intensity;                ///激光强度读数
-  uint16_t ring;                  /// 激光环数
-  uint16_t label;                 ///<点标签
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW // 确保正确对齐
-} EIGEN_ALIGN16;
+  struct PointXYZIRL
+  {
+    PCL_ADD_POINT4D;                // 四元浮点数XYZ
+    float intensity;                /// 激光强度读数
+    uint16_t ring;                  /// 激光环数
+    uint16_t label;                 ///< 点标签
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW // 确保正确对齐
+  } EIGEN_ALIGN16;
 
 };
 
@@ -86,10 +86,10 @@ private:
   void estimate_plane_(void);
   void extract_initial_seeds_(const pcl::PointCloud<VPoint> &p_sorted);
   void post_process(const pcl::PointCloud<VPoint>::Ptr in, const pcl::PointCloud<VPoint>::Ptr out);
-void clip_above(const pcl::PointCloud<VPoint>::Ptr in, const pcl::PointCloud<VPoint>::Ptr out);
+  void clip_above(const pcl::PointCloud<VPoint>::Ptr in, const pcl::PointCloud<VPoint>::Ptr out);
 
   void point_cb(const sensor_msgs::PointCloud2ConstPtr &in_cloud);
-void remove_close_far_pt(const pcl::PointCloud<VPoint>::Ptr in,const pcl::PointCloud<VPoint>::Ptr out);
+  void remove_close_far_pt(const pcl::PointCloud<VPoint>::Ptr in, const pcl::PointCloud<VPoint>::Ptr out);
 
   void clip_to_circle(const pcl::PointCloud<VPoint>::Ptr in,
                       const pcl::PointCloud<VPoint>::Ptr out);
