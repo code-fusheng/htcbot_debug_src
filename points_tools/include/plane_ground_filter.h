@@ -12,9 +12,6 @@
 #include <dynamic_reconfigure/server.h>
 #include <points_tools/PlaneGroundFilterConfig.h>
 
-// 禁用PCL预编译库，使用PointXYZIR点类型
-// #define PCL_NO_PRECOMPILE
-
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_types.h>
 #include <pcl/conversions.h>

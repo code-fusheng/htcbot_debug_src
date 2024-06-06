@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>plane_ground_filter</name>
+  <name>plane_fit_ground_filter</name>
   <version>0.0.1</version>
   <description>The plane_ground_filter package</description>
 
