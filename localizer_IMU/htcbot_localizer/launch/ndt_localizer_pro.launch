@@ -1,0 +1,39 @@
+<launch>
+
+	<arg name="switch_status" 					default="1" />
+    <arg name="is_debug"            			default="false" />
+	<arg name="lidar_frame" 					default="rslidar" />
+	<arg name="pointcloud_topic"				default="rslidar_points" />
+	<arg name="map_topic" 						default="points_map" />
+	<arg name="enable_auto_fix"					default="true" />
+	<arg name="use_gnss_fix" 					default="true" />
+	<arg name="enable_auto_init" 				default="false" />
+
+	<arg name="voxel_leaf_size" 				default="0.2" />
+
+    <arg name="tf_lidar_x"          			default="0" />
+    <arg name="tf_lidar_y"          			default="0" />
+	<arg name="tf_lidar_z"          			default="0" />
+    <arg name="tf_lidar_roll"       			default="0" />
+    <arg name="tf_lidar_pitch" 					default="0" />
+    <arg name="tf_lidar_yaw"        			default="0" />
+
+    <node pkg="htcbot_localizer" type="ndt_localizer_pro_node" name="ndt_localizer_pro_node" output="screen">
+		<param name="switch_status" 			value="$(arg switch_status)" />
+		<param name="is_debug"            		value="$(arg is_debug)" />
+		<param name="lidar_frame" 	            value="$(arg lidar_frame)" />
+        <param name="pointcloud_topic" 			value="$(arg pointcloud_topic)" />
+		<param name="map_topic"        			value="$(arg map_topic)" />
+		<param name="tf_lidar_x"          		value="$(arg tf_lidar_x)" />
+		<param name="tf_lidar_y"          		value="$(arg tf_lidar_y)" />
+		<param name="tf_lidar_z"          		value="$(arg tf_lidar_z)" />
+		<param name="tf_lidar_roll"       		value="$(arg tf_lidar_roll)" />
+		<param name="tf_lidar_pitch" 			value="$(arg tf_lidar_pitch)" />
+		<param name="tf_lidar_yaw"        		value="$(arg tf_lidar_yaw)" />
+		<param name="voxel_leaf_size"			value="$(arg voxel_leaf_size)" />
+		<param name="enable_auto_fix"			value="$(arg enable_auto_fix)" />
+		<param name="use_gnss_fix" 				value="$(arg use_gnss_fix)" />
+		<param name="enable_auto_init" 			value="$(arg enable_auto_init)" />
+    </node>
+
+</launch>
