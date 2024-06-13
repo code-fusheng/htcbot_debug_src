@@ -1,0 +1,7 @@
+<launch>
+
+    <node pkg="cal_angle" type="cal_angle" name="cal_angle" output="screen">
+        <!--  -->
+    </node> 
+
+</launch>

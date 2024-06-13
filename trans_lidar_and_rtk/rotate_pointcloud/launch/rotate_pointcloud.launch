@@ -1,0 +1,7 @@
+<launch>
+
+    <node pkg="rotate_pointcloud" type="rotate_pointcloud" name="rotate_pointcloud" output="screen">
+        <!--  -->
+    </node> 
+
+</launch>
