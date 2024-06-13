@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 generate_dynamic_reconfigure_options(
   cfg/htc_cloud_gateway.cfg
+  cfg/htc_cloud_websocket.cfg
 )
 
 # add_message_files()

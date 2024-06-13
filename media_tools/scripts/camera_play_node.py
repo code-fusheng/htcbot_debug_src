@@ -5,7 +5,7 @@
 Author: code-fusheng
 Date: 2024-04-29 23:10:26
 LastEditors: code-fusheng 2561035977@qq.com
-LastEditTime: 2024-05-18 12:43:32
+LastEditTime: 2024-06-13 11:20:52
 Description: 
 '''
 
@@ -37,10 +37,13 @@ class CameraPlayNode:
         self.height = 480
         self.image_pubs = []
         self.compressed_image_pubs = []
-        self.device_ports = ["/dev/camera_left", "/dev/camera_right"]
+        # self.device_ports = ["/dev/camera_left", "/dev/camera_right"]
+        self.device_ports = ["/dev/camera_front"]
         # self.device_ports = [0, 2]
         self.device_angle = [90, -90]
         self.frame_rate = 30
+        self.jpeg_quality = 50
+        self.bridge = CvBridge()
 
     def run(self):
         self.init()
@@ -70,23 +73,15 @@ class CameraPlayNode:
                                 # 获取旋转矩阵，这里不进行尺寸调整
                                 rotation_matrix = cv2.getRotationMatrix2D(_center, angle, 1.0)
                                 frame = cv2.warpAffine(frame, rotation_matrix, (_width, _height), borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0))
-                                
-                            ros_image = CvBridge().cv2_to_imgmsg(frame, "bgr8")
+
+                            ros_image = self.bridge.cv2_to_imgmsg(frame, "bgr8")
                             # Set ROS image header timestamp
                             ros_image.header.stamp = rospy.Time.now()
                             ros_image.header.frame_id = "camera"
                             # Publish ROS image message
                             self.image_pubs[i].publish(ros_image)
-                            # 压缩图像为JPEG格式
-                            # _, jpeg_frame = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 75])  # 质量因子可以根据需要调整
-                            # ros_compressed_image = CompressedImage()
-                            # ros_compressed_image.header.stamp = rospy.Time.now()
-                            # ros_compressed_image.header.frame_id = "camera"
-                            # ros_compressed_image.format = "jpeg"
-                            # ros_compressed_image.data = np.array(jpeg_frame).tostring()  # 将压缩后的字节流转换为字符串
-                            # 发布压缩后的图像消息
-                            # self.compressed_image_pubs[i].publish(ros_compressed_image)  # 确保你已经定义了相应的发布者
-
+            except CvBridgeError as e:
+                print(e)
             except KeyboardInterrupt:
                 print("KeyboardInterrupt received, shutting down...")
                 self.shutdown()
@@ -105,7 +100,7 @@ class CameraPlayNode:
             topic_name = "/camera_"+str(i)+"/image_raw"
             topic_name_compressed = "/camera_"+str(i)+"/image_compressed"
             self.image_pubs.append(rospy.Publisher(topic_name, Image, queue_size=120))
-            # self.compressed_image_pubs.append(rospy.Publisher(topic_name_compressed, CompressedImage, queue_size=120))
+            self.compressed_image_pubs.append(rospy.Publisher(topic_name_compressed, CompressedImage, queue_size=120))
 
     def init(self):
         self.init_publishers()

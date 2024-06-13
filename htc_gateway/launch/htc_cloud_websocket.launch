@@ -1,0 +1,6 @@
+<launch>
+
+    <node pkg="htc_gateway" type="htc_cloud_websocket.py" name="htc_cloud_websocket_node" output="screen">
+    </node>
+
+</launch>
