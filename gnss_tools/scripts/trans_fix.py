@@ -5,11 +5,7 @@
 Author: code-fusheng
 Date: 2024-04-22 12:49:17
 LastEditors: code-fusheng 2561035977@qq.com
-<<<<<<< HEAD
 LastEditTime: 2024-06-12 11:28:13
-=======
-LastEditTime: 2024-05-12 15:59:25
->>>>>>> dev
 Description: 
 pip install pyproj
 '''
@@ -51,11 +47,7 @@ class Transfix:
         self.is_first = True
 
         self.pub_gps = rospy.get_param("~pub_gps", default=True)
-<<<<<<< HEAD
-        self.pub_utm = rospy.get_param("~pub_utm", default=False)
-=======
         self.pub_utm = rospy.get_param("~pub_utm", default=True)
->>>>>>> dev
         self.pub_enu = rospy.get_param("~pub_enu", default=False)
 
         rospy.Subscriber('/fix', NavSatFix, self.fix_callback, queue_size=10)
@@ -114,14 +106,6 @@ class Transfix:
         print("base size: , gps size: ", len(self.lane_path_points), len(self.gps_path_points))
         if len(self.lane_path_points) > 0:
             self.is_load_path_points = True
-<<<<<<< HEAD
-        if os.path.exists(self.config_file):
-            with open(self.config_file, 'r') as file:
-                content = file.read()
-                self.base_lat, self.base_lon = map(float, content.split(','))
-                self.utm_offset_x, self.utm_offset_y = self.transformer.transform(self.base_lat, self.base_lon)
-=======
->>>>>>> dev
 
     def fix_callback(self, fix_msg):
         if self.pub_gps:
@@ -135,10 +119,6 @@ class Transfix:
         if self.base_lat == None or self.base_lat == None:
             self.base_lat = lat
             self.base_lon = lon
-<<<<<<< HEAD
-            with open(self.config_file, 'w') as file:
-                file.write(self.base_lat+","+self.base_lon)
-=======
             try:
                 if not os.path.exists(self.config_file):
                     rospy.logerr("配置文件不存在")
@@ -160,7 +140,6 @@ class Transfix:
             x, y = self.transformer.transform(lat, lon)
             self.utm_offset_x = x
             self.utm_offset_y = y
->>>>>>> dev
         if self.pub_utm:
             self.trans_fix_2_utm(fix_msg)
         if self.pub_enu:
