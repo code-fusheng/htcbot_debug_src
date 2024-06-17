@@ -1,0 +1,20 @@
+<launch>
+
+    <arg name="is_debug"            default="false" />
+    <arg name="is_filter"           default="true" />
+    <arg name="filter_distance"     default="0.1" />
+    <arg name="save_base"           default="true" />
+    <arg name="save_gps"            default="true" />
+    <arg name="save_utm"            default="false" />
+    <arg name="save_enu"            default="false" />    
+
+    <node pkg="waypoint_tools" name="waypoint_saver_node" type="waypoint_saver_node" output="screen">
+        <param name="is_filter"             value="$(arg is_filter)" />
+        <param name="filter_distance"       value="$(arg filter_distance)" />
+        <param name="save_base"             value="$(arg save_base)" />
+        <param name="save_gps"              value="$(arg save_gps)" />
+        <param name="save_utm"              value="$(arg save_utm)" />
+        <param name="save_enu"              value="$(arg save_enu)" />  
+    </node>
+ 
+</launch>
