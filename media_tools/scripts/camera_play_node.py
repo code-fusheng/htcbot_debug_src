@@ -37,8 +37,8 @@ class CameraPlayNode:
         self.height = 480
         self.image_pubs = []
         self.compressed_image_pubs = []
-        # self.device_ports = ["/dev/camera_left", "/dev/camera_right"]
-        self.device_ports = ["/dev/camera_front"]
+        self.device_ports = ["/dev/camera_left", "/dev/camera_right"]
+        # self.device_ports = ["/dev/camera_front"]
         # self.device_ports = [0, 2]
         self.device_angle = [90, -90]
         self.frame_rate = 30

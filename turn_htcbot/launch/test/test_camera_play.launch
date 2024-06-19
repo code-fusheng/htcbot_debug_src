@@ -1,0 +1,20 @@
+<launch>
+
+    <!-- camera param -->
+    <arg name="htc_camera_mode"                 default="Intel_D435i" />
+
+    <!-- camera driver -->
+    <include file="$(find turn_htcbot)/launch/include/camera_htc.launch">
+        <arg name="htc_camera_mode"         value="$(arg htc_camera_mode)" />
+    </include>
+
+    <!-- 摄像头画面 -->
+    <include file="$(find media_tools)/launch/camera_play.launch">
+    </include>
+
+    <include file="$(find htc_gateway)/launch/htc_cloud_websocket.launch">
+    </include>
+
+    <node pkg="rviz" type="rviz" name="Rviz" args="-d $(find turn_htcbot)/rviz/test_camera_play.rviz" />
+
+</launch>

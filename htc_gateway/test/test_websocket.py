@@ -11,7 +11,7 @@ async def connect_to_websocket():
     vin = "HTCBOT_A0003"
     uri = f"ws://124.223.72.28:10240/robot/push/websocket?sid={client_id}&vin={vin}"  # 替换为你的 WebSocket 服务器的 URI
     
-    target_fps = 1  # 目标帧率
+    target_fps = 5  # 目标帧率
     frame_skip = int(30 / target_fps)  # 跳过的帧数, 例如假设原始摄像头帧率为30fps
 
     async with websockets.connect(uri) as websocket:
