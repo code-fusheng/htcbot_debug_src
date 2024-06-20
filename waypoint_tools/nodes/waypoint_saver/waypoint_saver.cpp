@@ -2,7 +2,7 @@
  * @Author: code-fusheng
  * @Date: 2024-04-24 12:49:35
  * @LastEditors: code-fusheng 2561035977@qq.com
- * @LastEditTime: 2024-04-26 00:28:21
+ * @LastEditTime: 2024-06-12 11:05:28
  * @Description:
  */
 #include "waypoint_saver.h"
@@ -20,6 +20,7 @@ namespace WaypointSaverNS
         switch_to_exp_ = 0;
         base_waypoints_filename_ = "lane_1.csv";
         gps_waypoints_filename_ = "gps_lane_1.csv";
+        utm_waypoints_filename_ = "utm_lane_1.csv";
         pre_node_id_ = 1;
         node_id_ = 1;
         next_node_id_ = 2;
