@@ -1,0 +1,3 @@
+[submodule "drivers/realsensor_ros"]
+	path = drivers/realsensor_ros
+	url = https://github.com/code-fusheng/realsense-ros.git

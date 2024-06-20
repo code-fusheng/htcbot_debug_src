@@ -33,16 +33,21 @@ wget http://fishros.com/install -O fishros && . fishros
 ### Python
 
 ```
+sudo apt-get update
 sudo apt --fix-broken install
 sudo apt install python3.8
 sudo apt-get install python3-setuptools
 sudo apt-get install python3-pip
 pip install virtualenv
+sudo apt-get install python3.8 python3.8-venv python3.8-dev
+
+
 python<version> -m venv <virtual-environment-name>
 eg:
  mkdir projectA
  cd projectA
  python3 -m venv lpr_py
+ # python3.8 -m venv lpr_py38
  source lpr_py/bin/activate
  deactivate
 ```

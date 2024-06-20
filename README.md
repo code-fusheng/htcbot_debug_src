@@ -29,6 +29,10 @@ pip install apscheduler==3.7.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 ```
+git submodule add https://github.com/code-fusheng/realsense-ros.git drivers/realsensor_ros
+```
+
+```
 巡检机器人实验工程开发日志 htcbot_debug_ws
 
 commit 51a791b5d6b86036a0f519f2070ab1fea7607c88 (HEAD -> dev, origin/dev_mapping, origin/dev, dev_mapping)
