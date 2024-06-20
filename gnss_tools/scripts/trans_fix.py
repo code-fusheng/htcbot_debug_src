@@ -47,7 +47,7 @@ class Transfix:
         self.is_first = True
 
         self.pub_gps = rospy.get_param("~pub_gps", default=True)
-        self.pub_utm = rospy.get_param("~pub_utm", default=False)
+        self.pub_utm = rospy.get_param("~pub_utm", default=True)
         self.pub_enu = rospy.get_param("~pub_enu", default=False)
 
         rospy.Subscriber('/fix', NavSatFix, self.fix_callback, queue_size=10)
@@ -106,11 +106,6 @@ class Transfix:
         print("base size: , gps size: ", len(self.lane_path_points), len(self.gps_path_points))
         if len(self.lane_path_points) > 0:
             self.is_load_path_points = True
-        if os.path.exists(self.config_file):
-            with open(self.config_file, 'r') as file:
-                content = file.read()
-                self.base_lat, self.base_lon = map(float, content.split(','))
-                self.utm_offset_x, self.utm_offset_y = self.transformer.transform(self.base_lat, self.base_lon)
 
     def fix_callback(self, fix_msg):
         if self.pub_gps:
@@ -124,8 +119,27 @@ class Transfix:
         if self.base_lat == None or self.base_lat == None:
             self.base_lat = lat
             self.base_lon = lon
-            with open(self.config_file, 'w') as file:
-                file.write(self.base_lat+","+self.base_lon)
+            try:
+                if not os.path.exists(self.config_file):
+                    rospy.logerr("配置文件不存在")
+                    with open(self.config_file, "w") as file:
+                        file.write("%f,%f\n" % (self.base_lat, self.base_lon))
+                else:
+                    with open(self.config_file, "r") as file:
+                        content = file.readline().strip()
+                        if not content:
+                            raise ValueError("配置文件中没有经纬度值")
+                        self.base_lat, self.base_lon = map(float, content.split(","))
+                        rospy.loginfo("base_lat: %f, base_lon: %f" % (self.base_lat, self.base_lon))   
+            except FileNotFoundError as e:
+                rospy.logerr("文件未找到: %s" % e)
+            except ValueError as e:
+                rospy.logerr("读取经纬度值时出错: %s" % e)
+            except Exception as e:
+                rospy.logerr("异常: %s" % e)
+            x, y = self.transformer.transform(lat, lon)
+            self.utm_offset_x = x
+            self.utm_offset_y = y
         if self.pub_utm:
             self.trans_fix_2_utm(fix_msg)
         if self.pub_enu:

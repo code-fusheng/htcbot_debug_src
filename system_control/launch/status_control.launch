@@ -1,0 +1,6 @@
+<launch>
+
+    <node pkg="system_control" name="status_control_node" type="status_control_node.py" output="screen">
+    </node>
+
+</launch>
