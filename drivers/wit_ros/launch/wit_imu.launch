@@ -1,0 +1,10 @@
+<launch>
+
+    <!-- imu 对应 python 文件 -->
+    <node pkg="wit_ros" type="wit_imu_driver.py" name="imu" output="screen">
+        <param name="port"               type = "str"    value="/dev/imu_wit9073"/>
+        <param name="baud"               type = "int"    value="2000000"/>
+    </node>
+
+</launch>
+
