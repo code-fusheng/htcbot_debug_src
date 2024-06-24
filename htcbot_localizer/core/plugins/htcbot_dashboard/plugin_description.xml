@@ -1,0 +1,9 @@
+<library path="lib/libhtcbot_dashboard">
+  <class name="htcbot_dashboard/HtcbotDashboard"
+         type="htcbot_dashboard::HtcbotDashboard"
+         base_class_type="rviz::Panel">
+    <description>
+      A panel widget for htcbot dashboard.
+    </description>
+  </class>
+</library>

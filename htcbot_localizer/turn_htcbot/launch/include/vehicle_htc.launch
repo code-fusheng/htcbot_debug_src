@@ -1,0 +1,9 @@
+<launch>
+    
+    <arg name="htc_vehicle_mode" default="yunle_jd01" doc="htcbot | minibot | yunle_jd01 | yunle_nwd_01 | yunle_jd03" />
+
+    <group if="$(eval htc_vehicle_mode == 'yunle_jd01')">
+        <include file="$(find can_module_usb2can)/launch/can_bridge_jd01.launch"></include>
+    </group>
+
+</launch>

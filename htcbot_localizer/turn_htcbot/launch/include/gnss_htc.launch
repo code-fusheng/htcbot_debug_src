@@ -1,0 +1,24 @@
+<launch>
+
+    <!-- GNSS 类型 -->
+    <arg name="htc_gnss_mode"       default="Dove-482" doc="opt: G60 | Dove-482" />
+    <arg name="htc_gnss_frame"      default="gps" />
+    <arg name="htc_gnss_topic"      default="fix"/>
+    <arg name="htc_gnss_port"       default="/dev/gps" />
+    <arg name="htc_gnss_baud"       default="115200" />
+
+    <include if="$(eval htc_gnss_mode == 'G60')" file="$(find fdilink_ahrs)/launch/ahrs_data.launch">
+    </include>
+
+    <group if="$(eval htc_gnss_mode == 'Dove-482')">
+        <include file="$(find nmea_navsat_driver)/launch/nmea_serial_driver_qianxun.launch">
+            <arg name="port"            value="$(arg htc_gnss_port)" />
+            <arg name="baud"            value="$(arg htc_gnss_baud)" />
+            <arg name="frame_id"        value="$(arg htc_gnss_frame)" />
+            <arg name="use_GNSS_time"   default="False" />
+            <arg name="time_ref_source" default="gps" />
+            <arg name="useRMC"          default="False" />
+        </include>
+    </group>
+
+</launch>
