@@ -7,6 +7,8 @@ import os
 import time
 import serial
 import device_model
+from sensor_msgs.msg import Imu
+
 
 class WitImuDriver:
 
@@ -17,7 +19,7 @@ class WitImuDriver:
         self.is_debug = False
         self.port = "/dev/imu_wit9073"
         self.baud = 2000000
-        self.imu_topic = ""
+        self.imu_topic = "imu_raw"
 
     def run(self):
         self.init()
@@ -27,14 +29,16 @@ class WitImuDriver:
             # rospy.loginfo("[py_demo_node] ===> Running...")
             if self.device.isOpen:
                 # pass
-                print(
-                "ID:{}  {}{}  AccX:{}  AAAAAbbbccY:{}  AccZ:{}  AsX:{}  AsY:{}  AsZ:{}  AngX:{}  AngY:{}  AngZ:{}  Hx:{}  Hy:{}  Hy:{}"
-                .format(self.device.get("CanID"), self.device.get("canmode_2"), self.device.get("canmode_1"), self.device.get("AccX"), self.device.get("AccY"),
-                        self.device.get("AccZ"), self.device.get("AsX"), self.device.get("AsY"), self.device.get("AsZ"), self.device.get("AngX"),
-                        self.device.get("AngY"), self.device.get("AngZ"), self.device.get("HX"), self.device.get("HY"), self.device.get("HZ")))
+                # print(self.device.isOpen)
+                # print(
+                # "ID:{}  {}{}  AccX:{}  AAAAAbbbccY:{}  AccZ:{}  AsX:{}  AsY:{}  AsZ:{}  AngX:{}  AngY:{}  AngZ:{}  Hx:{}  Hy:{}  Hy:{}"
+                # .format(self.device.get("CanID"), self.device.get("canmode_2"), self.device.get("canmode_1"), self.device.get("AccX"), self.device.get("AccY"),
+                #         self.device.get("AccZ"), self.device.get("AsX"), self.device.get("AsY"), self.device.get("AsZ"), self.device.get("AngX"),
+                #         self.device.get("AngY"), self.device.get("AngZ"), self.device.get("HX"), self.device.get("HY"), self.device.get("HZ")))
+                self.build_data()
             else:
-                pass
-                # self.open_device()
+                # pass
+                self.open_device()
             # ... 以及其他您需要的传感器数据  
             rate.sleep()
         if self.device.isOpen:
@@ -44,6 +48,9 @@ class WitImuDriver:
         self.port = rospy.get_param("~port", "/dev/imu_wit9073")
         self.baud = rospy.get_param("~baud", 2000000)
         self.imu_topic = rospy.get_param("~imu_topic", "imu_raw")
+
+        self.imu_raw_pub = rospy.Publisher(self.imu_topic, Imu, queue_size=10)
+
         self.open_device()
         pass  # Add any initialization steps here
     
@@ -70,6 +77,23 @@ class WitImuDriver:
             print(e)
             rospy.loginfo("wit_imu_driver com open failed")
             exit()
+
+    def build_data(self):
+        # 创建一个Imu消息并填充数据  
+        imu_msg = Imu()  
+        imu_msg.header.stamp = rospy.Time.now()  
+        imu_msg.header.frame_id = "imu_link"  
+        imu_msg.linear_acceleration.x = self.device.get("AccX")  
+        imu_msg.linear_acceleration.y = self.device.get("AccY") 
+        imu_msg.linear_acceleration.z = self.device.get("AccZ")
+        imu_msg.angular_velocity.x = self.device.get("AsX")  
+        imu_msg.angular_velocity.y = self.device.get("AsY")  
+        imu_msg.angular_velocity.z = self.device.get("AsZ")  
+        imu_msg.orientation.x =self.device.get("AngX")  
+        imu_msg.orientation.y = self.device.get("AngY")  
+        imu_msg.orientation.z =self.device.get("AngZ")  
+        imu_msg.orientation.w = 1.0
+        self.imu_raw_pub.publish(imu_msg)
 
 if __name__ == '__main__':
     try:
