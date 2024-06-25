@@ -1,0 +1,56 @@
+<launch>
+
+	<arg name="rollOutDensity" 				default="0.2" />
+	<arg name="rollOutNumber" 				default="20"   />
+	<arg name="pathDensity" 				default="0.25" />
+	<arg name="maxVelocity"					default="5.0" />
+	<arg name="minVelocity"					default="0" />
+	<arg name="microPlanDistance" 			default="30" />
+	<arg name="smoothingDataWeight" 		default="0.47" />
+	<arg name="smoothingSmoothWeight" 		default="0.2" />
+	<arg name="smoothingToleranceError" 	default="0.05" />
+	<arg name="horizontalSafetyDistance" 	default="0.4" />
+	<arg name="verticalSafetyDistance" 		default="0.4" />
+	<arg name="modeSwitch" 					default="true" />
+	<arg name="switch_status"				default="1" />
+
+	<node pkg="op_local_planner" type="op_common_params_node" name="op_common_params_node" output="screen">
+        <!-- Common Parameters -->
+		<param name="modeSwitch" 				value="$(arg modeSwitch)" />	
+        <param name="rollOutDensity" 			value="$(arg rollOutDensity)" />
+        <param name="rollOutNumber" 			value="$(arg rollOutNumber)" />	
+		<param name="pathDensity" 				value="$(arg pathDensity)" />	
+		<param name="maxVelocity" 				value="$(arg maxVelocity)" />	
+		<param name="minVelocity" 				value="$(arg minVelocity)" />	
+		<param name="microPlanDistance" 		value="$(arg microPlanDistance)" />	
+		<param name="smoothingDataWeight" 		value="$(arg smoothingDataWeight)" />	
+		<param name="smoothingSmoothWeight" 	value="$(arg smoothingSmoothWeight)" />	
+		<param name="smoothingToleranceError" 	value="$(arg smoothingToleranceError)" />	
+		<param name="horizontalSafetyDistance" 	value="$(arg horizontalSafetyDistance)" />	
+		<param name="verticalSafetyDistance" 	value="$(arg verticalSafetyDistance)" />
+		<param name="switch_status"				value="$(arg switch_status)" />	
+	</node>	
+
+    <arg name="carTipMargin" 		    default="0.6"  /> 
+	<arg name="rollInMargin" 		    default="2.5" /> 
+	<arg name="rollInSpeedFactor" 	    default="0.25" />		
+	<arg name="enableHeadingSmoothing" 	default="true" />
+			
+	<node pkg="op_local_planner" type="op_trajectory_generator_node" name="op_trajectory_generator_node" output="screen">
+        <param name="switch_status"				value="$(arg switch_status)" />	
+		<param name="carTipMargin" 		        value="$(arg carTipMargin)"  /> 
+        <param name="rollInMargin" 		        value="$(arg rollInMargin)" /> 
+        <param name="rollInSpeedFactor" 		value="$(arg rollInSpeedFactor)" />		
+        <param name="enableHeadingSmoothing" 	value="$(arg enableHeadingSmoothing)" />         
+	</node>	
+
+	<arg name="enablePrediction" 			    default="false" />	 
+	<arg name="minObstacleEvaluateDistance"     default="10.0" />				 		 
+			
+	<node pkg="op_local_planner" type="op_trajectory_evaluator_node" name="op_trajectory_evaluator_node" output="screen">
+		<param name="switch_status"					value="$(arg switch_status)" />	
+		<param name="minObstacleEvaluateDistance"   value="$(arg minObstacleEvaluateDistance)" />
+		<param name="enablePrediction" 			    value="$(arg enablePrediction)" />										
+	</node>	
+
+</launch>

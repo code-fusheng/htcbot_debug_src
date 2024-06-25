@@ -1,0 +1,27 @@
+<launch>
+
+    <arg name="in_cloud_topic"  default="rslidar_points" />
+    <arg name="switch_status"   default="0" />
+
+    <!-- 点云聚类检测 -->
+    <node pkg="laser_euclidean_cluster" type="laser_euclidean_cluster_node" name="laser_euclidean_cluster_node" output="screen">
+        <param name="switch_status" value="$(arg switch_status)" type="int" />
+        <param name="in_cloud_topic" value="$(arg in_cloud_topic)" type="string" />
+        <param name="remove_points_upto" value="0.4" type="double" />
+        <param name="downsample_cloud" value="false" type="bool" />
+        <param name="leaf_size" value="0.1" type="double" />
+        <!-- 裁剪区域 -->
+        <param name="clip_min_height" value="-0.5" type="double" />
+        <param name="clip_max_height" value="0.5" type="double" />
+        <param name="keep_lanes" value="true" type="bool" /> 
+        <param name="keep_lane_left_distance" value="5.0" type="double" />
+        <param name="keep_lane_right_distance" value="5.0" type="double" />
+        <param name="cluster_size_min" value="20" type="int" />
+        <param name="cluster_size_max" value="100000" type="int" />
+        <param name="cluster_merge_threshold" value="0" type="double" />
+        <param name="clustering_distance" value="0.05" type="double" />        
+        <param name="remove_ground" value="false" type="bool" />
+        <param name="use_multiple_thres" value="false" type="bool" />
+    </node>
+
+</launch>
