@@ -13,3 +13,14 @@ KERNEL=="ttyUSB*", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE:="077
 
 mac
 Port: /dev/cu.usbserial-14330, Description: USB Serial, Hardware ID: USB VID:PID=1A86:7523 LOCATION=20-3.3
+
+### Input
+
+### Output
+
+```
+self.imu_raw_pub = rospy.Publisher(self.imu_topic, Imu, queue_size=10)
+self.imu_rpy_pub = rospy.Publisher("imu_rpy", Quaternion, queue_size=10)
+self.imu_pose_pub = rospy.Publisher('imu_pose', PoseStamped, queue_size=10)
+self.imu_odom_pub = rospy.Publisher("imu_odom", Odometry, queue_size=10)
+```
