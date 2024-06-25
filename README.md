@@ -42,4 +42,15 @@ feature : 新增建图 Pre 兼容UTM
 更新内容:
 - 新增离线建图功能模块
 - 调整航迹点记录从原始GPS轨迹为UTM轨迹
+
+commit 7762dbdc0e1fc6c46ac1f7b6451be625f92ced7c (origin/20240624_dev_imu_test, 20240624_dev_imu_test)
+Author: code-fusheng <2561035977@qq.com>
+Date:   Tue Jun 25 17:23:34 2024 +0800
+feature : 新增 imu 驱动 预发布原始数据、姿态、磁航角
+更新内容:
+- 接入WIT-9073高精度IMU传感器
+- 发布 imu_raw 原始数据
+- 发布 imu_pose 姿态信息
+- 简易计算磁航角
+
 ```
