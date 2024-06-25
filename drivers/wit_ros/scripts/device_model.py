@@ -49,6 +49,8 @@ class DeviceModel:
         # 串口CAN波特率 Can baud
         self.serialConfig.canBaud = canBaud * 1000
 
+        self.running = False
+
     # region 获取设备数据 Obtain device data
     # 设置设备数据 Set device data
     def set(self, key, value):
@@ -133,10 +135,12 @@ class DeviceModel:
     # 打开设备 open Device
     def openDevice(self):
         # 先关闭端口 Turn off the device first
-        self.closeDevice()
+        if self.serialPort and self.serialPort.is_open:
+            self.closeDevice()
         try:
             self.serialPort = serial.Serial(self.serialConfig.portName, self.serialConfig.baud, timeout=0.5)
             self.isOpen = True
+            self.running = True
             print("{}已打开".format(self.serialConfig.portName))
 
             # 设置USB-CAN模块CAN波特率 Set USB-CAN module CAN baud rate
@@ -157,7 +161,7 @@ class DeviceModel:
     # 监听串口数据线程 Listening to serial data threads
     def readDataTh(self, threadName, delay):
         print("启动" + threadName)
-        while True:
+        while self.running:
             # 如果串口打开了
             if self.isOpen:
                 try:
@@ -174,11 +178,11 @@ class DeviceModel:
 
     # 关闭设备  close Device
     def closeDevice(self):
-        if self.serialPort is not None:
+        if self.serialPort and self.serialPort.is_open:
             self.serialPort.close()
-            print("端口关闭了")
-        self.isOpen = False
-        print("设备关闭了")
+            self.isOpen = False
+            self.running = False
+            print("设备串口 Close")
 
     # region 数据解析 data analysis
     # 串口数据处理  Serial port data processing
