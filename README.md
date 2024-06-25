@@ -30,6 +30,10 @@ pip install apscheduler==3.7.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 ```
 git submodule add https://github.com/code-fusheng/realsense-ros.git drivers/realsensor_ros
+git submodule add https://github.com/code-fsbot/cartographer_ros.git temp/cartographer_ros
+
+git remote add upstream https://github.com/cartographer-project/cartographer_ros.git
+git fetch upstream
 ```
 
 ```

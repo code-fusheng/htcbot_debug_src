@@ -1,3 +1,9 @@
 [submodule "drivers/realsensor_ros"]
 	path = drivers/realsensor_ros
 	url = https://github.com/code-fusheng/realsense-ros.git
+[submodule "temp/cartographer_ros"]
+	path = temp/cartographer_ros
+	url = https://github.com/code-fsbot/cartographer_ros.git
+[submodule "temp/ros_tutorials"]
+	path = temp/ros_tutorials
+	url = https://github.com/code-fsbot/ros_tutorials.git

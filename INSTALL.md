@@ -505,3 +505,7 @@ ros-$ROS_DISTRO-nmea-navsat-driver \
 libglew-dev \
 ros-$ROS_DISTRO-lanelet2*
 ```
+
+```
+https://wiki.ros.org/ROS/Tutorials#ROS_Tutorials
+```
