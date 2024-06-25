@@ -1,0 +1,11 @@
+<launch>
+
+    <arg name="serial_port"         default="/dev/ultrasonic_front" />
+    <arg name="frame_id"            default="ultrasonic_link" />
+
+    <node pkg="ultrasonic_driver" type="dyp_ultrasonic_node.py" name="ultrasonic_driver_node" output="screen">
+        <param name="serial_port"   value="$(arg serial_port)" />
+        <param name="frame_id"      value="$(arg frame_id)" />
+    </node>
+
+</launch>

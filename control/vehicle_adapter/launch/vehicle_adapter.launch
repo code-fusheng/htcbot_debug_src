@@ -1,0 +1,15 @@
+<launch>
+
+    <arg name="enable_smooth_steer"             default="true" />
+    <arg name="enable_smooth_speed"             default="true" />
+    <arg name="max_speed_limit"                 default="4" />
+    <arg name="min_speed_limit"                 default="0.2" />
+
+    <node pkg="vehicle_adapter" name="vehicle_adapter_node" type="vehicle_adapter_node.py" output="screen">
+        <param name="enable_smooth_steer"       value="$(arg enable_smooth_steer)" />
+        <param name="enable_smooth_speed"       value="$(arg enable_smooth_speed)" />
+        <param name="max_speed_limit"           value="$(arg max_speed_limit)" />
+        <param name="min_speed_limit"           value="$(arg min_speed_limit)" />
+    </node>
+
+</launch>

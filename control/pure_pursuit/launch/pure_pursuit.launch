@@ -1,0 +1,7 @@
+<launch>
+
+    <node pkg="pure_pursuit" type="pure_pursuit_node" name="pure_pursuit" output="screen" >
+        <rosparam command="load"  file="$(find pure_pursuit)/params/config_htcbot.yaml"/>
+    </node>   
+
+</launch>
