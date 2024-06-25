@@ -1,6 +1,0 @@
-<launch>
-
-    <node pkg="map_tools" type="pcd_map_grid_node" name="pcd_map_grid_node" output="screen">
-    </node>
-
-</launch>
