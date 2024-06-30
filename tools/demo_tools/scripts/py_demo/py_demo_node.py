@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 '''
@@ -9,6 +9,7 @@ LastEditTime: 2024-05-15 14:11:45
 Description: 
 '''
 
+import sys
 import rospy
 import csv
 import math
@@ -18,6 +19,7 @@ import time
 from dynamic_reconfigure.server import Server
 from demo_tools.cfg import PyDemoConfig
 from htcbot_msgs.srv import SwitchStatusSrv, SwitchStatusSrvResponse, SwitchStatusSrvRequest
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
 
 class PyDemoNode:
 
@@ -28,13 +30,28 @@ class PyDemoNode:
         self.server = Server(PyDemoConfig, self.dynamic_reconfigure_callback)
         self.srv_switch_status = rospy.Service("~set_switch_status", SwitchStatusSrv, self.switch_status_callback)
 
+        # 初始化 PyQt 应用和窗口
+        self.app = QApplication(sys.argv)
+        self.window = QWidget()
+        self.window.setWindowTitle("PyQt Window in ROS Node")
+        self.layout = QVBoxLayout()
+        self.label = QLabel("Switch Status: 0")
+        self.layout.addWidget(self.label)
+        self.window.setLayout(self.layout)
+        self.window.resize(250, 150)
+
     def run(self):
         self.init()
+        # self.window.show()
         rate = rospy.Rate(1)  # 1 Hz
         while not rospy.is_shutdown():  # 添加条件
             # Perform your main operations here
             # rospy.loginfo("[py_demo_node] ===> Running...")
+            # self.label.setText(f"Switch Status: {self.switch_status}")
             rate.sleep()
+
+        # 运行 PyQt 应用
+        # sys.exit(self.app.exec_())
 
     def init(self):
         pass  # Add any initialization steps here

@@ -3,3 +3,5 @@ htcbot:
   scenes:
     parent_path: "test"
     child_path: "t1"
+  sensor:
+    lidar: ls_C16

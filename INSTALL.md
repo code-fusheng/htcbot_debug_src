@@ -39,7 +39,7 @@ sudo apt install python3.8
 sudo apt-get install python3-setuptools
 sudo apt-get install python3-pip
 pip install virtualenv
-sudo apt-get install python3.8 python3.8-venv python3.8-dev
+sudo apt-get install python3.8 python3-setuptools python3-pip python3.8-venv python3.8-dev
 
 
 python<version> -m venv <virtual-environment-name>
