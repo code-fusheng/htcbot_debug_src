@@ -12,9 +12,8 @@
 KERNEL=="ttyUSB*", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE:="0777", GROUP:="dialout",  SYMLINK+="ultrasonic_front"
 # Dove-485
 KERNEL=="ttyUSB*", ATTRS{idVendor}=="067b", ATTRS{idProduct}=="23a3", MODE:="0777", GROUP:="dialout",  SYMLINK+="gps"
-
-# IMU WIT-9073
-KERNEL=="ttyUSB*", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE:="0777", GROUP:="dialout", SYMLINK+="imu_wit9073"
+# D300
+KERNEL=="ttyUSB*", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE:="0777", GROUP:="dialout",  SYMLINK+="gps"
 
 # 摄像头
 # 同型号相机的命名通过USB插口区分

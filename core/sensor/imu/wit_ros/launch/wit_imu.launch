@@ -1,0 +1,16 @@
+<launch>
+
+    <arg name="imu_port"            default="/dev/imu_wit9073" />
+    <arg name="imu_topic"           default="imu_raw" />
+    <arg name="imu_frame"           default="imu_link" />
+
+    <!-- imu 对应 python 文件 -->
+    <node pkg="wit_ros" type="wit_imu_driver.py" name="imu" output="screen">
+        <param name="port"          type = "str"    value="$(arg imu_port)"/>
+        <param name="baud"          type = "int"    value="2000000" />
+        <param name="imu_frame"         type = "str"    value="$(arg imu_frame)" />       
+        <param name="imu_topic"         type = "str"    value="$(arg imu_topic)" />
+    </node>
+
+</launch>
+

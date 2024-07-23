@@ -1,5 +1,0 @@
-htcbot:
-  uuid: "HTCBOT_A0003"
-  scenes:
-    parent_path: "csxzx"
-    child_path: "2105"

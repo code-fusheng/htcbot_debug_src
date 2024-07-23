@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="htc_lidar_mode" default="ls_N10P" doc="opt: ls_N10P, ls_N10P_net, ls_C16"/>
+    <arg name="htc_lidar_mode" default="ls_C16" doc="opt: ls_N10P, ls_N10P_net, ls_C16"/>
     <arg name="htc_lidar_point_topic" default="/rslidar_points" />
     <arg name="htc_lidar_scan_topic" default="/scan" />
     <arg name="htc_lidar_frame" default="rslidar" />
@@ -35,6 +35,26 @@
         </include>
         <!-- <include file="$(find pointcloud_to_laserscan)/launch/pointcloud_2_scan.launch"></include> -->
         <!-- <include file="$(find pointcloud_to_laserscan/launch/pointcloud_scan.launch)" /> -->
+    </group>
+
+    <!-- 镭神智能C16 V2 -->
+    <group if="$(eval htc_lidar_mode == 'ls_C16_v2')">
+        <include file="$(find lslidar_driver_v2)/launch/lslidar_c16.launch">
+            <arg name="device_ip" value="$(arg htc_lidar_port)" />
+            <arg name="frame_id" value="$(arg htc_lidar_frame)" />
+            <arg name="pointcloud_topic" value="$(arg htc_lidar_point_topic)" />
+            <arg name="scan_topic" value="$(arg htc_lidar_scan_topic)" />
+        </include> 
+    </group>
+
+    <!-- 镭神智能C16 V4 -->
+    <group if="$(eval htc_lidar_mode == 'ls_C16_v4')">
+        <include file="$(find lslidar_driver_v4)/launch/lslidar_c16.launch">
+            <arg name="device_ip" value="$(arg htc_lidar_port)" />
+            <arg name="frame_id" value="$(arg htc_lidar_frame)" />
+            <arg name="pointcloud_topic" value="$(arg htc_lidar_point_topic)" />
+            <arg name="scan_topic" value="$(arg htc_lidar_scan_topic)" />
+        </include> 
     </group>
 
     <!-- 启动宇树 L1 雷达 -->

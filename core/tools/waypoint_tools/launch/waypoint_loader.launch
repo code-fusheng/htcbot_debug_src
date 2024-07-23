@@ -1,0 +1,10 @@
+<launch>
+
+    <!--  -->
+    <arg name="nav_mode" default="LIDAR" />
+
+    <node pkg="waypoint_tools" name="waypoint_loader_node" type="waypoint_loader_node.py" output="screen">
+        <param name="nav_mode" value="$(arg nav_mode)" />
+    </node>
+
+</launch>

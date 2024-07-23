@@ -1,0 +1,16 @@
+htcbot:
+  uuid: "HTCBOT_A0003"
+  type: "yunle_jd01"
+  scenes:
+    parent_path: "test"
+    child_path: "t3"
+  ws:
+    ip: "118.190.156.22"
+    vin: "HTCBOT_A0003"
+    sid: "10003"
+  mqtt:
+    cid: "HTCBOT_A0003"
+    broker: "118.190.156.22"
+    port: "1883"
+    username: "htcbot"
+    password: "htcbot123456"

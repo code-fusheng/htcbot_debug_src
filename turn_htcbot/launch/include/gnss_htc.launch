@@ -21,4 +21,15 @@
         </include>
     </group>
 
+    <group if="$(eval htc_gnss_mode == 'D300')">
+        <include file="$(find nmea_navsat_driver)/launch/nmea_serial_driver.launch">
+            <arg name="port"            value="$(arg htc_gnss_port)" />
+            <arg name="baud"            value="$(arg htc_gnss_baud)" />
+            <arg name="frame_id"        value="$(arg htc_gnss_frame)" />
+            <arg name="use_GNSS_time"   default="False" />
+            <arg name="time_ref_source" default="gps" />
+            <arg name="useRMC"          default="False" />
+        </include>
+    </group>    
+
 </launch>

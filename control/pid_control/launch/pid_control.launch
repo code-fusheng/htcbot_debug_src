@@ -1,6 +1,0 @@
-<launch>
-
-    <node pkg="pid_control" name="pid_control_node" type="pid_control_node" output="screen">
-    </node>
-
-</launch>

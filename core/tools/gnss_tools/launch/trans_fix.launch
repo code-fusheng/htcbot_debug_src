@@ -1,0 +1,15 @@
+<launch>
+
+    <arg name="pub_gps"   default="true" />
+    <arg name="pub_utm"   default="true" />
+    <arg name="pub_enu"   default="false" />
+    <arg name="mode_switch" default="false" />
+
+    <node name="trans_fix_node" pkg="gnss_tools" type="trans_fix.py" output="screen">
+        <param name="pub_gps"           value="$(arg pub_gps)" />
+        <param name="pub_utm"           value="$(arg pub_utm)" />
+        <param name="pub_enu"           value="$(arg pub_enu)" />
+        <param name="mode_switch"       value="$(arg mode_switch)" />
+    </node>
+
+</launch>

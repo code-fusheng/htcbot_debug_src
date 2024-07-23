@@ -1,0 +1,22 @@
+<launch>
+
+    <arg name="start_key" default="A0003" />
+    <arg name="env_key" default="test" />
+    <rosparam file="$(find turn_htcbot)/config/htcbot_$(arg start_key)_$(arg env_key).yaml" command="load" />
+
+    <!-- 是否调试 -->
+    <arg name="is_debug" default="false" />
+
+    <!-- 全局参数定义 -->
+    <!-- PS: 实车环境请勿注释 切记使用 false ; 离线环境配合 clock -->
+    <param name="use_sim_time" value="$(arg is_debug)" type="bool"/>
+
+    <!-- vehicle param -->
+    <arg name="htc_vehicle_mode"                default="yunle_jd01" />
+
+    <!-- vehicle driver -->
+    <include unless="$(arg is_debug)" file="$(find turn_htcbot)/launch/include/vehicle_htc.launch">
+        <arg name="htc_vehicle_mode"            value="$(arg htc_vehicle_mode)" />
+    </include>
+
+</launch>

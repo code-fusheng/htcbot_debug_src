@@ -1,6 +1,7 @@
 <launch>
 
-    <rosparam file="$(find turn_htcbot)/config/htcbot_whthjc.yaml" command="load" />
+    <arg name="start_key" default="whthjc" />
+    <rosparam file="$(find turn_htcbot)/config/htcbot_$(arg start_key).yaml" command="load" />
 
     <!-- 是否调试 -->
     <arg name="is_debug" default="false" />

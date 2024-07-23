@@ -1,0 +1,15 @@
+<launch>
+
+    <param name="use_sim_time" value="false" type="bool"/>
+
+    <arg name="start_key" default="A0003" />
+    <rosparam file="$(find turn_htcbot)/config/htcbot_$(arg start_key).yaml" command="load" />
+
+    <include file="$(find htc_gateway)/launch/htc_cloud_gateway.launch">
+    </include>
+
+    <!-- system_control - status -->
+    <include file="$(find system_control)/launch/status_control.launch"> 
+    </include>
+
+</launch>

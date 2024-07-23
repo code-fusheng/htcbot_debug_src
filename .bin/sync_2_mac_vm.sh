@@ -5,6 +5,7 @@
  # 192.168.2.106 192.168.2.110
  # 172.20.10.5 
  # 192.168.1.141
+ # 192.168.0.22
 ### 
 
-rsync --delete -avz --progress --exclude='.git' . code@192.168.2.110:/home/code/htcbot_debug_ws/src
+rsync --delete -avz --progress --exclude='.git' . code@192.168.0.22:/home/code/htcbot_debug_ws/src

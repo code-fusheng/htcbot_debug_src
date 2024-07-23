@@ -32,5 +32,6 @@
         "random": "cpp",
         "queue": "cpp",
         "stack": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/Users/fusheng/WorkSpace/CompanyWork/work-fusheng/robot-pro/htcbot_debug_ws/src/drivers/lslidar_ros_v4/lslidar_driver"
 }

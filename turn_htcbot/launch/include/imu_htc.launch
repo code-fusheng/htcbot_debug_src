@@ -13,4 +13,10 @@
         <arg name="imu_frame" value="$(arg htc_imu_frame)"/>
     </include>
 
+    <include if="$(eval htc_imu_mode == 'wit_9730')" file="$(find wit_ros)/launch/wit_imu.launch">
+        <arg name="imu_port"  value="$(arg htc_imu_port)"/>
+        <arg name="imu_topic"  value="$(arg htc_imu_topic)"/>
+        <arg name="imu_frame" value="$(arg htc_imu_frame)"/>
+    </include>
+
 </launch>

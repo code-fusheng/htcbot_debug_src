@@ -1,0 +1,12 @@
+<launch>
+
+    <node pkg="htc_gateway" type="htc_cloud_gateway.py" name="htc_cloud_gateway_node" output="screen">
+    </node>
+
+    <!-- <node pkg="htc_gateway" type="htc_video_streamer.py" name="htc_video_streamer_node" output="screen">
+    </node> -->
+
+    <node pkg="htc_gateway" type="htc_cloud_websocket.py" name="htc_cloud_websocket_node" output="screen">
+    </node>
+
+</launch>

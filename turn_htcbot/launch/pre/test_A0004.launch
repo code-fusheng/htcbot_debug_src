@@ -1,0 +1,178 @@
+<launch>
+
+    <arg name="start_key" default="A0004" />
+    <arg name="env_key" default="test" />
+    <rosparam file="$(find turn_htcbot)/config/htcbot_$(arg start_key)_$(arg env_key).yaml" command="load" />
+
+    <!-- 是否调试 -->
+    <arg name="is_debug" default="false" />
+
+    <!-- 是否自动 -->
+    <arg name="is_auto" default="false" />
+
+    <!-- 全局参数定义 -->
+    <!-- PS: 实车环境请勿注释 切记使用 false ; 离线环境配合 clock -->
+    <param name="use_sim_time" value="$(arg is_debug)" type="bool"/>
+    <!-- 公共基础路径 -->
+
+    <!-- 是否开启建图 -->
+    <arg name="is_mapping" default="true" />
+    <!-- 是否开启导航 -->
+    <arg name="is_navigation" default="false" />
+
+    <!-- laser param -->
+    <arg name="htc_lidar_mode"                  default="ls_C16_v2" />
+    <arg name="htc_lidar_scan_topic"            default="/scan" />
+    <arg name="htc_lidar_frame"                 default="rslidar"/>
+    <arg name="htc_lidar_point_topic"           default="/rslidar_points" />
+    <arg name="htc_lidar_point_filter_topic"    default="/points_no_ground" />
+    <arg name="htc_lidar_port"                  default="10.168.1.200" />
+    <!-- vehicle param -->
+    <arg name="htc_vehicle_mode"                default="yunle_jd01" />
+    <!-- imu -->
+    <arg name="htc_imu_mode"                    default="fdi_N100" />
+    <arg name="htc_imu_frame"                   default="imu_link" />
+    <arg name="htc_imu_topic"                   default="imu_raw"/>
+    <!-- gnss param -->
+    <arg name="htc_gnss_mode"                   default="Dove-482" />
+    <!-- ultrasonic param -->
+    <arg name="htc_ultrasonic_mode"             default="dyp_A05" />
+    <!-- camera param -->
+    <arg name="htc_camera_mode"                 default="Intel_D435i" />
+
+    <!-- sensor driver -->
+
+    <!-- laser driver -->
+    <include unless="$(arg is_debug)" file="$(find turn_htcbot)/launch/include/lidar_htc.launch">
+        <arg name="htc_lidar_frame"             value="$(arg htc_lidar_frame)"/>
+        <arg name="htc_lidar_mode"              value="$(arg htc_lidar_mode)" />
+        <arg name="htc_lidar_point_topic"       value="$(arg htc_lidar_point_topic)" />
+        <arg name="htc_lidar_port"              value="$(arg htc_lidar_port)" />
+    </include>
+    <!-- vehicle driver -->
+    <include unless="$(arg is_debug)" file="$(find turn_htcbot)/launch/include/vehicle_htc.launch">
+        <arg name="htc_vehicle_mode"            value="$(arg htc_vehicle_mode)" />
+    </include>
+    <!-- imu driver -->
+
+    <!-- gnss driver -->
+
+    <!-- ultrasonic driver -->
+
+    <!-- camera driver -->
+    
+    <!-- 发布 tf 坐标树 -->
+    <node pkg="tf" type="static_transform_publisher"        name="world_2_map"             args="0 0 0 0 0 0 world map 10" />
+    <node pkg="tf" type="static_transform_publisher"        name="base_2_lidar"            args="0.37 0 0.625 0 0 0 base_link rslidar 10" />
+
+    <!-- ndt_param -->
+    <arg name="tf_lidar_x"     default="0.37" />
+    <arg name="tf_lidar_y"     default="0" />
+    <arg name="tf_lidar_z"     default="0.625" />
+    <arg name="tf_lidar_roll"  default="0" />
+    <arg name="tf_lidar_pitch" default="0" />
+    <arg name="tf_lidar_yaw"   default="0" />
+
+    <!-- 节点 switch -->
+    <!-- <arg name="mapping_status_switch"   default="0" />
+    <arg name="localizer_status_switch"   default="0" /> -->
+
+    <!-- ndt_mapping -->
+    <include file="$(find htcbot_mapping)/launch/ndt_mapping_pro.launch">
+        <arg name="lidar_frame"         value="$(arg htc_lidar_frame)" />
+        <arg name="pointcloud_topic"    value="$(arg htc_lidar_point_topic)" /> 
+        <arg name="tf_lidar_x"          value="$(arg tf_lidar_x)" />
+        <arg name="tf_lidar_y"          value="$(arg tf_lidar_y)" />
+        <arg name="tf_lidar_z"          value="$(arg tf_lidar_z)" />
+        <arg name="tf_lidar_roll"       value="$(arg tf_lidar_roll)" />
+        <arg name="tf_lidar_pitch"      value="$(arg tf_lidar_pitch)" />
+        <arg name="tf_lidar_yaw"        value="$(arg tf_lidar_yaw)" />
+    </include>
+
+    <!-- ndt_localizer -->
+    <include if="$(arg is_navigation)" file="$(find htcbot_localizer)/launch/ndt_localizer_pro.launch">
+        <arg name="switch_status" 		value="1" />
+        <arg name="lidar_frame"         value="$(arg htc_lidar_frame)" />
+        <arg name="pointcloud_topic"    value="$(arg htc_lidar_point_topic)" /> 
+        <arg name="tf_lidar_x"          value="$(arg tf_lidar_x)" />
+        <arg name="tf_lidar_y"          value="$(arg tf_lidar_y)" />
+        <arg name="tf_lidar_z"          value="$(arg tf_lidar_z)" />
+        <arg name="tf_lidar_roll"       value="$(arg tf_lidar_roll)" />
+        <arg name="tf_lidar_pitch"      value="$(arg tf_lidar_pitch)" />
+        <arg name="tf_lidar_yaw"        value="$(arg tf_lidar_yaw)" />
+    </include>
+
+    <!-- map_tools - loader -->
+    <include if="$(arg is_navigation)" file="$(find map_tools)/launch/map_loader.launch">
+        <arg name="margin" 				value="200" />
+	    <arg name="update_interval"		value="1000" />
+	    <arg name="update_offset"		value="10" />
+    </include>
+
+    <!-- map_tools - grid -->
+    <include file="$(find map_tools)/launch/pcd_map_grid.launch"></include>
+
+    <!-- gnss_tools trans -->
+    <include file="$(find gnss_tools)/launch/trans_fix.launch">
+        <arg name="pub_gps"   default="true" />
+        <arg name="pub_utm"   default="true" />
+        <arg name="pub_enu"   default="false" />
+    </include>
+
+    <!-- waypoint_tools -->
+    <include if="$(arg is_mapping)" file="$(find waypoint_tools)/launch/waypoint_saver.launch">
+        <arg name="is_filter"           value="true"/>
+        <arg name="filter_distance"     value="0.1"/>
+        <arg name="save_base"           value="true" />
+        <arg name="save_gps"            value="false" />
+        <arg name="save_utm"            value="false" />
+        <arg name="save_enu"            value="false" />    
+    </include>
+
+    <!-- waypoint_loader -->
+    <include if="$(arg is_navigation)" file="$(find waypoint_tools)/launch/waypoint_loader.launch">
+    </include>
+
+    <include if="$(arg is_navigation)" file="$(find points_tools)/launch/ring_ground_filter.launch">
+    </include>
+
+    <!-- system_control - status -->
+    <include file="$(find system_control)/launch/status_control.launch"> 
+    </include>
+
+    <!-- 聚类检测 -->
+    <include if="$(arg is_navigation)" file="$(find laser_euclidean_cluster)/launch/laser_euclidean_cluster.launch">
+        <arg name="switch_status"       value="0" />
+        <arg name="in_cloud_topic"      value="$(arg htc_lidar_point_filter_topic)" />
+    </include>
+
+    <!-- 雷达障碍物检测 -->
+    <include if="$(arg is_navigation)" file="$(find laser_detector)/launch/laser_detector.launch">
+    </include>
+
+    <!-- 局部路径规划 -->
+    <include if="$(arg is_navigation)" file="$(find op_local_planner)/launch/op_local_planner.launch">
+    </include>
+
+    <!-- PP 轨迹跟踪 -->
+    <include if="$(arg is_navigation)" file="$(find pure_pursuit)/launch/pure_pursuit.launch">
+    </include>
+
+    <!-- vehicle_adapter -->
+    <include if="$(arg is_navigation)" file="$(find vehicle_adapter)/launch/vehicle_adapter.launch">
+    </include>
+
+    <!-- 摄像头画面 -->
+
+    <!-- voice_play -->
+
+    <include unless="$(arg is_debug)" file="$(find htc_gateway)/launch/htc_cloud_gateway.launch">
+    </include>
+
+    <!-- auto_start -->
+    <include if="$(arg is_auto)" file="$(find turn_htcbot)/launch/include/auto_start.launch">
+    </include>
+
+    <node pkg="rviz" type="rviz" name="Rviz" args="-d $(find turn_htcbot)/rviz/htcbot_csxzx.rviz" required="true"/>
+
+</launch>

@@ -1,0 +1,18 @@
+<launch>
+
+    <!-- Arguments参数 -->
+    <arg name="htc_car_mode" default="htcbot_yunle_jd01" doc="opt: wheeltec_mini_akm, yunle_small_bee_akm | yunle_jd01" />   
+
+    <group if="$(eval htc_car_mode == 'htcbot_yunle_jd01')">
+        <param name="robot_description" textfile="$(find turn_htcbot)/urdf/htcbot_yunle_jd01.urdf" />
+
+        <!-- 发布 tf 坐标树 -->
+        <node pkg="tf" type="static_transform_publisher"        name="world_2_map"             args="0 0 0 0 0 0 world map 100" />
+        <node pkg="tf" type="static_transform_publisher"        name="base_2_lidar"            args="0.37 0 0.625 0 0 0 base_link rslidar 100" />
+    </group>
+
+    <!-- 读取urdf信息(robot_description) 发布话题：/joint_states-->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    
+</launch>

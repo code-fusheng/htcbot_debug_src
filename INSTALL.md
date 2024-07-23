@@ -463,8 +463,8 @@ ntpq -p
 ### opencv
 
 ```
-pip install torch torchvision torchaudio -i https://pypi.tuna.tsinghua.edu.cn/simple
-pip install numpy
+pip3 install torch torchvision -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip3 install numpy
 pip install matplotlib
 pip install opencv-python -i https://pypi.tuna.tsinghua.edu.cn/simple
 pip install ultralytics -i https://pypi.tuna.tsinghua.edu.cn/simple
@@ -473,6 +473,8 @@ pip install opencv-python --prefer-binary -i https://pypi.tuna.tsinghua.edu.cn/s
 
 pip install --upgrade pip setuptools wheel
 ```
+
+### other
 
 ```
 sudo apt-get install -y \

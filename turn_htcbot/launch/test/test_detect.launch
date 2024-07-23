@@ -1,0 +1,37 @@
+<launch>
+
+    <param name="use_sim_time" value="false" type="bool"/>
+
+    <arg name="start_key" default="A0004" />
+    <rosparam file="$(find turn_htcbot)/config/htcbot_$(arg start_key)_test.yaml" command="load" />
+
+    <!-- 是否调试 -->
+    <arg name="is_debug" default="false" />
+
+    <!-- robot model -->
+    <include file="$(find turn_htcbot)/launch/include/model_htc.launch">
+    </include>
+
+    <!-- laser param -->
+    <arg name="htc_lidar_mode"                  default="ls_C16_v4" />
+    <arg name="htc_lidar_scan_topic"            default="/scan" />
+    <arg name="htc_lidar_frame"                 default="rslidar"/>
+    <arg name="htc_lidar_point_topic"           default="/rslidar_points" />
+    <arg name="htc_lidar_point_filter_topic"    default="/points_no_ground" />
+    <arg name="htc_lidar_port"                  default="10.168.1.200" />
+
+    <!-- laser driver -->
+    <include unless="$(arg is_debug)" file="$(find turn_htcbot)/launch/include/lidar_htc.launch">
+        <arg name="htc_lidar_frame"             value="$(arg htc_lidar_frame)"/>
+        <arg name="htc_lidar_mode"              value="$(arg htc_lidar_mode)" />
+        <arg name="htc_lidar_point_topic"       value="$(arg htc_lidar_point_topic)" />
+        <arg name="htc_lidar_port"              value="$(arg htc_lidar_port)" />
+    </include>
+
+    <!-- 雷达障碍物检测 -->
+    <include file="$(find laser_detector)/launch/laser_detector.launch">
+    </include>
+
+    <node pkg="rviz" type="rviz" name="Rviz" args="-d $(find turn_htcbot)/rviz/test_detect.rviz" required="true"/>
+
+</launch>

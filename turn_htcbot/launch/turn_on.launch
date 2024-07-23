@@ -1,0 +1,22 @@
+<launch>
+
+    <arg name="start_key" default="" />
+
+    <param name="use_sim_time" value="false" type="bool"/>
+
+    <!-- 是否开启建图 -->
+    <arg name="is_mapping" default="false" />
+
+    <!-- 是否开启导航 -->
+    <arg name="is_navigation" default="true" /> 
+
+    <!-- 场景启动配置脚本 -->
+    <include file="$(find turn_htcbot)/launch/turn_on_$(arg start_key).launch">
+        <arg name="start_key"           value="$(arg start_key)" />
+        <arg name="is_debug"            value="false" />
+        <arg name="is_auto"            value="true" />
+        <arg name="is_mapping"          value="$(arg is_mapping)" />
+        <arg name="is_navigation"       value="$(arg is_navigation)" />      
+    </include>
+
+</launch>
